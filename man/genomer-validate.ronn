@@ -1,0 +1,63 @@
+genomer-validate(1) -- Test assembly files for errors
+=====================================================
+
+## SYNOPSIS
+
+`genomer validate` <type>
+
+## DESCRIPTION
+
+**Genomer-validate** test the assembly files for errors. Any detected errors 
+are reported to the terminal.
+
+## OPTIONS
+
+  * `--genbank`
+    When testing annotation files the GFF ninth-column attribute row is tested 
+    to ensure that the attribute keys only include those allowed in the genbank 
+    file format.
+
+## FILE TYPES
+
+### ANNOTATIONS
+
+Test the annotation file for errors. The default location for this file is 
+**assembly/annotations.gff**. The following checks are made on the annotation 
+file.
+
+  * `Identical locations`:
+    Flag annotations of the same type with identical start and end coordinates.
+
+  * `Identical IDs`:
+    Flag annotations with the same ID attribute.
+
+  * `Missing ID`:
+    Flag annotations without an ID attribute.
+
+  * `Invalid GFF Attributes`:
+    Flag annotations with capitalised attribute keys outside of the GFF3 
+    vocabulary.
+
+  * `Invalid Genbank Attributes (optional)`:
+    Flag annotations with attribute keys outside of the genbank vocabulary. 
+    This check is only performed if specified with the `--genbank` command line 
+    flag.
+
+
+## EXAMPLES
+
+Test that the annotation file is error free.
+
+    $ genomer validate annotations
+
+Test that the genome scaffold file is error free.
+
+    $ genomer validate scaffold
+
+
+**Genomer-validate** is written in Ruby and depends on the genomer gem. See the 
+Gemfile in the genomer-plugin-validate gem install directory for version details.
+
+## COPYRIGHT
+
+**Genomer** is Copyright (C) 2012 Michael Barton <http://michaelbarton.me.uk>
