@@ -6,15 +6,30 @@ describe GenomerPluginValidate::Annotations do
   def annotation(options = {})
     Annotation.new(options).to_gff3_record
   end
+  
+  let(:duplicate) do
+    {:attributes => {'ID' => '1'}, :start => 1, :end => 3}
+  end
+
+  describe "#run" do
+
+    it "should return an error for duplicate ID annotations" do
+      validator = described_class.new([],{})
+      mock(validator).annotations do
+        [annotation(duplicate), annotation(duplicate.merge({:start => 4, :end => 6}))]
+      end
+      validator.run.should == <<-EOS.unindent
+        WARN: Duplicate ID '1' for entry 'record 1..3'
+        WARN: Duplicate ID '1' for entry 'record 4..6'
+      EOS
+    end
+    
+  end
 
   describe "#validate_for_duplicate_ids" do
 
     subject do
       described_class.new([],{}).validate_for_duplicate_ids(annotations)
-    end
-
-    let(:duplicate) do
-      {:attributes => {'ID' => '1'}}
     end
 
     describe "where there are no annotations" do

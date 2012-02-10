@@ -3,6 +3,7 @@ $LOAD_PATH.unshift(File.join(current, '..', 'lib'), current)
 
 require 'rspec'
 require 'scaffolder/test/helpers'
+require 'heredoc_unindent'
 require 'genomer-plugin-validate'
 
 RSpec.configure do |config|
