@@ -1,10 +1,8 @@
 # -*- encoding: utf-8 -*-
-$:.push File.expand_path("../lib", __FILE__)
-require "genomer-plugin-validate/version"
 
 Gem::Specification.new do |s|
   s.name        = "genomer-plugin-validate"
-  s.version     = GenomerPluginValidate::VERSION
+  s.version     = File.read('VERSION')
   s.authors     = ["Michael Barton"]
   s.email       = ["mail@michaelbarton.me.uk"]
   s.homepage    = ""
