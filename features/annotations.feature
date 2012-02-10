@@ -28,7 +28,7 @@ Feature: Validating annotation files
         """
         gem 'genomer-plugin-validate', :path => '../../../'
         """
-     When I run `genomer view table --identifier=genome`
+     When I run `genomer validate annotations`
      Then the exit status should be 1
       And the output should contain:
         """
