@@ -4,7 +4,7 @@ require "genomer-plugin-validate/version"
 
 Gem::Specification.new do |s|
   s.name        = "genomer-plugin-validate"
-  s.version     = Genomer::Plugin::Validate::VERSION
+  s.version     = GenomerPluginValidate::VERSION
   s.authors     = ["Michael Barton"]
   s.email       = ["mail@michaelbarton.me.uk"]
   s.homepage    = ""
