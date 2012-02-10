@@ -5,4 +5,5 @@ require 'rspec'
 require 'genomer-plugin-validate'
 
 RSpec.configure do |config|
+  config.mock_with :rr
 end

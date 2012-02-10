@@ -1,4 +1,11 @@
-require "genomer-plugin-validate/version"
+require "genomer"
 
-module GenomerPluginValidate
+class GenomerPluginValidate < Genomer::Plugin
+
+  def run
+    validator = arguments.shift
+    require 'genomer-plugin-validate/' + validator
+    self.class.const_get(validator.capitalize).new(arguments,flags).run
+  end
+
 end
