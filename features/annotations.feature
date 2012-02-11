@@ -61,8 +61,8 @@ Feature: Validating annotation files
      Then the exit status should be 0
       And the output should contain:
         """
-        WARN: Duplicate ID 'gene1' for entry 'contig1 1..3'
-        WARN: Duplicate ID 'gene1' for entry 'contig1 4..6'
+        WARN: Duplicate ID 'gene1' for entry 'scaffold 1..3'
+        WARN: Duplicate ID 'gene1' for entry 'scaffold 4..6'
 
         """
 
@@ -99,9 +99,9 @@ Feature: Validating annotation files
       And the output should not contain "gene3"
       And the output should contain:
         """
-        WARN: Duplicate ID 'gene1' for entry 'contig1 1..3'
-        WARN: Duplicate ID 'gene1' for entry 'contig1 4..6'
-        WARN: Duplicate ID 'gene2' for entry 'contig1 7..9'
-        WARN: Duplicate ID 'gene2' for entry 'contig1 10..12'
+        WARN: Duplicate ID 'gene1' for entry 'scaffold 1..3'
+        WARN: Duplicate ID 'gene1' for entry 'scaffold 4..6'
+        WARN: Duplicate ID 'gene2' for entry 'scaffold 7..9'
+        WARN: Duplicate ID 'gene2' for entry 'scaffold 10..12'
 
         """
