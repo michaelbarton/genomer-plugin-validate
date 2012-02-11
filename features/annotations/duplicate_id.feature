@@ -1,6 +1,6 @@
-Feature: Validating annotation files
+Feature: Validating annotation files for duplicate IDs
   In order to submit genome annotations
-  A user can use the "annotation" command
+  A user can use the "annotation" command to detect duplicate IDs
   to ensure that their annotation file contains no errors
 
   @disable-bundler
