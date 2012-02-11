@@ -3,14 +3,13 @@ require 'genomer-plugin-validate'
 class GenomerPluginValidate::Annotations < Genomer::Plugin
 
   VALIDATORS = {
-    :validate_for_duplicate_ids => lambda{ |i|
-      "WARN: Duplicate ID '#{i.id}' for entry '#{i.seqname} #{i.start}..#{i.end}'" }
+    :validate_for_duplicate_ids => lambda{ |i| "Duplicate ID '#{i.id}'" }
   }
 
   def run
     VALIDATORS.map do |(method,formatter)|
       send(method,annotations).map{|i| formatter.call(i)}
-    end.flatten * "\n" + "\n"
+    end.flatten.uniq * "\n" + "\n"
   end
 
   def validate_for_duplicate_ids(annotations)

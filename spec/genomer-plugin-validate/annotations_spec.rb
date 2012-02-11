@@ -19,8 +19,7 @@ describe GenomerPluginValidate::Annotations do
         [annotation(duplicate), annotation(duplicate.merge({:start => 4, :end => 6}))]
       end
       validator.run.should == <<-EOS.unindent
-        WARN: Duplicate ID '1' for entry 'record 1..3'
-        WARN: Duplicate ID '1' for entry 'record 4..6'
+        Duplicate ID '1'
       EOS
     end
     
