@@ -20,4 +20,13 @@ class GenomerPluginValidate::Annotations < Genomer::Plugin
     ids.values.select{|v| v.length > 1}.flatten
   end
 
+  def validate_for_identical_locations(annotations)
+    locs = annotations.inject(Hash.new{|h,k| h[k] = []}) do |hash,attn|
+      hash[[attn.start..attn.end]] <<= attn
+      hash
+    end
+
+    locs.values.select{|v| v.length > 1}
+  end
+
 end
