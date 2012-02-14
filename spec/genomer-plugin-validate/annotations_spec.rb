@@ -15,11 +15,21 @@ describe GenomerPluginValidate::Annotations do
 
     it "should return an error for duplicate ID annotations" do
       validator = described_class.new([],{})
-      mock(validator).annotations do
+      stub(validator).annotations do
         [annotation(duplicate), annotation(duplicate.merge({:start => 4, :end => 6}))]
       end
       validator.run.should == <<-EOS.unindent
         Duplicate ID '1'
+      EOS
+    end
+    
+    it "should return an error for identical annotation locations" do
+      validator = described_class.new([],{})
+      stub(validator).annotations do
+        [annotation(duplicate), annotation(duplicate.merge(:attributes => {'ID' => 2}))]
+      end
+      validator.run.should == <<-EOS.unindent
+        Identical locations for '1', '2'
       EOS
     end
     
