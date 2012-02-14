@@ -3,7 +3,10 @@ require 'genomer-plugin-validate'
 class GenomerPluginValidate::Annotations < Genomer::Plugin
 
   VALIDATORS = {
-    :validate_for_duplicate_ids => lambda{ |i| "Duplicate ID '#{i.id}'" }
+    :validate_for_duplicate_ids       => lambda{ |i| "Duplicate ID '#{i.id}'" },
+    :validate_for_identical_locations => lambda do |attns|
+      "Identical locations for " << attns.map{|i| "'#{i.id}'"}.sort.join(', ')
+    end
   }
 
   def run
@@ -12,12 +15,19 @@ class GenomerPluginValidate::Annotations < Genomer::Plugin
     end.flatten.uniq * "\n" + "\n"
   end
 
-  def validate_for_duplicate_ids(annotations)
-    ids = annotations.inject(Hash.new{|h,k| h[k] = []}) do |hash,attn|
-      hash[attn.id] <<= attn
+  def organise_by(annotations,&block)
+    annotations.inject(Hash.new{|h,k| h[k] = []}) do |hash,attn|
+      hash[yield(attn)] <<= attn
       hash
     end
-    ids.values.select{|v| v.length > 1}.flatten
   end
 
+  def validate_for_duplicate_ids(attns)
+    organise_by(attns,&:id).values.select{|v| v.length > 1}.flatten
+  end
+
+  def validate_for_identical_locations(attns)
+    organise_by(attns){|i| [i.start,i.end]}.values.select{|v| v.length > 1}
+  end
+  
 end

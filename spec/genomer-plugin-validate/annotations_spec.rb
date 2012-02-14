@@ -15,11 +15,21 @@ describe GenomerPluginValidate::Annotations do
 
     it "should return an error for duplicate ID annotations" do
       validator = described_class.new([],{})
-      mock(validator).annotations do
+      stub(validator).annotations do
         [annotation(duplicate), annotation(duplicate.merge({:start => 4, :end => 6}))]
       end
       validator.run.should == <<-EOS.unindent
         Duplicate ID '1'
+      EOS
+    end
+    
+    it "should return an error for identical annotation locations" do
+      validator = described_class.new([],{})
+      stub(validator).annotations do
+        [annotation(duplicate), annotation(duplicate.merge(:attributes => {'ID' => 2}))]
+      end
+      validator.run.should == <<-EOS.unindent
+        Identical locations for '1', '2'
       EOS
     end
     
@@ -81,6 +91,71 @@ describe GenomerPluginValidate::Annotations do
 
       it "should return only the duplicated annotations" do
         subject.should == annotations[1..2]
+      end
+
+    end
+
+  end
+
+  describe "#validate_for_identical_locations" do
+
+    subject do
+      described_class.new([],{}).validate_for_identical_locations(annotations)
+    end
+
+    describe "where there are no annotations" do
+
+      let(:annotations) do
+        []
+      end
+
+      it "should return no annotations" do
+        subject.should == annotations
+      end
+
+    end
+
+    describe "where two annotations have duplicate coordinates" do
+
+      let(:annotations) do
+        [annotation(duplicate), annotation(duplicate)]
+      end
+
+      it "should return a single array containing the annotations" do
+        subject.should == [annotations]
+      end
+
+    end
+
+    describe "where there are two different groups of annotations with duplicate locations" do
+
+      before do
+        @attn_1 = annotation(duplicate)
+        @attn_2 = @attn_1.clone
+        @attn_3 = annotation(duplicate.merge({:start => 4, :stop => 6}))
+        @attn_4 = @attn_3.clone
+      end
+
+      let(:annotations) do
+        [@attn_1,@attn_3,@attn_2,@attn_4]
+      end
+
+      it "should return all annotations" do
+        subject.should == [[@attn_1,@attn_2],[@attn_3,@attn_4]]
+      end
+
+    end
+
+    describe "where only some annotations are duplicates" do
+
+      let(:annotations) do
+        [annotation(duplicate),
+         annotation(duplicate),
+         annotation(duplicate.merge({:start => 4, :stop => 6}))]
+      end
+
+      it "should return only the duplicated annotations" do
+        subject.should == [annotations[0..1]]
       end
 
     end
