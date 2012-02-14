@@ -5,7 +5,7 @@ class GenomerPluginValidate::Annotations < Genomer::Plugin
   VALIDATORS = {
     :validate_for_duplicate_ids       => lambda{ |i| "Duplicate ID '#{i.id}'" },
     :validate_for_identical_locations => lambda do |attns|
-      "Identical locations for " << attns.map{|i| "'#{i.id}'"}.join(', ')
+      "Identical locations for " << attns.map{|i| "'#{i.id}'"}.sort.join(', ')
     end
   }
 
