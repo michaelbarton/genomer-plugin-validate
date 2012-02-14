@@ -34,5 +34,9 @@ class GenomerPluginValidate::Annotations < Genomer::Plugin
   def validate_for_identical_locations(attns)
     organise_by(attns){|i| [i.start,i.end]}.values.select{|v| v.length > 1}
   end
+
+  def validate_for_gff3_attributes(attns)
+    []
+  end
   
 end

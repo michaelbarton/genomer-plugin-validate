@@ -216,4 +216,65 @@ describe GenomerPluginValidate::Annotations do
 
   end
 
+  describe "#validate_for_missing_ids" do
+
+    subject do
+      described_class.new([],{}).validate_for_gff3_attributes(annotations)
+    end
+
+    describe "where there are no annotations" do
+
+      let(:annotations) do
+        []
+      end
+
+      it "should return no annotations" do
+        subject.should be_empty
+      end
+
+    end
+
+    attrs = %w|ID Name Alias Parent Target Gap Derives_from Note Dbxref Ontology_term Is_circular Unknown_term|
+    attrs.each do |attr|
+
+      describe "where an annotation has the #{attr} attribute" do
+
+        let(:annotations) do
+          [annotation(duplicate.merge({:attributes => {attr => 'something'}}))]
+        end
+
+        it "should return false" do
+          subject.should be_empty
+        end
+
+      end
+
+    end
+
+    describe "where there are lower case attribute keys" do
+
+      let(:annotations) do
+        [annotation(duplicate.merge({:attributes => {'lower_case' => 'something'}}))]
+      end
+
+      it "should return no annotations" do
+        subject.should be_empty
+      end
+
+    end
+
+    describe "where there is a unknown capitalised attribute keys" do
+
+      let(:annotations) do
+        [annotation(duplicate),
+         annotation(duplicate.merge({:attributes => {'lower_case' => 'something'}}))]
+      end
+
+      it "should return no annotations" do
+        subject.should == annotations[1..1]
+      end
+
+    end
+  end
+
 end
