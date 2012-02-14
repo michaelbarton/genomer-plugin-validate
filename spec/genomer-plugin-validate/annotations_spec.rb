@@ -32,6 +32,16 @@ describe GenomerPluginValidate::Annotations do
         Identical locations for '1', '2'
       EOS
     end
+
+    it "should return an error for missing ID attributes" do
+      validator = described_class.new([],{})
+      stub(validator).annotations do
+        [annotation(duplicate.merge(:attributes => {}))]
+      end
+      validator.run.should == <<-EOS.unindent
+        Annotations found with missing ID attribute
+      EOS
+    end
     
   end
 
@@ -156,6 +166,50 @@ describe GenomerPluginValidate::Annotations do
 
       it "should return only the duplicated annotations" do
         subject.should == [annotations[0..1]]
+      end
+
+    end
+
+  end
+
+  describe "#validate_for_missing_ids" do
+
+    subject do
+      described_class.new([],{}).validate_for_missing_ids(annotations)
+    end
+
+    describe "where there are no annotations" do
+
+      let(:annotations) do
+        []
+      end
+
+      it "should return no annotations" do
+        subject.should be_empty
+      end
+
+    end
+
+    describe "where an annotation does have an id attribute" do
+
+      let(:annotations) do
+        [annotation(duplicate)]
+      end
+
+      it "should return false" do
+        subject.should be_empty
+      end
+
+    end
+
+    describe "where an annotation doesn't have an id attribute" do
+
+      let(:annotations) do
+        [annotation(duplicate),annotation(duplicate.merge(:attributes => {}))]
+      end
+
+      it "should return true" do
+        subject.should == annotations[1..1]
       end
 
     end
