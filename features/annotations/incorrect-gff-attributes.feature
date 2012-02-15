@@ -43,6 +43,6 @@ Feature: Validating annotation files for incorrect GFF3 attributes
       And the output should not contain "gene3"
       And the output should contain:
         """
-        Unknown GFF3 attribute key 'Unknown_term' found for 'gene12'
+        Illegal GFF3 attributes for 'gene12'
 
         """

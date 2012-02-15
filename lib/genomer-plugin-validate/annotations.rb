@@ -2,8 +2,12 @@ require 'genomer-plugin-validate'
 
 class GenomerPluginValidate::Annotations < Genomer::Plugin
 
+    GFF3_KEYS = %w|ID Name Alias Parent Target Gap Derives_from Note Dbxref
+      Ontology_term Is_circular|
+
   VALIDATORS = {
     :validate_for_duplicate_ids => lambda{|i| "Duplicate ID '#{i.id}'" },
+    :validate_for_gff3_attributes => lambda{|i| "Illegal GFF3 attributes for '#{i.id}'" },
     :validate_for_missing_ids   => lambda{|_| "Annotations found with missing ID attribute" },
     :validate_for_identical_locations => lambda do |attns|
       "Identical locations for " << attns.map{|i| "'#{i.id}'"}.sort.join(', ')
@@ -36,7 +40,9 @@ class GenomerPluginValidate::Annotations < Genomer::Plugin
   end
 
   def validate_for_gff3_attributes(attns)
-    []
+    attns.select do |attn|
+      ! Hash[attn.attributes].keys.grep(/^[A-Z]/).all?{|k| GFF3_KEYS.include? k }
+    end
   end
-  
+
 end
