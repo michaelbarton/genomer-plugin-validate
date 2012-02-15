@@ -42,7 +42,16 @@ describe GenomerPluginValidate::Annotations do
         Annotations found with missing ID attribute
       EOS
     end
-    
+
+    it "should return an error for invalide uppercase attribute keys" do
+      validator = described_class.new([],{})
+      stub(validator).annotations do
+        [annotation(duplicate.merge(:attributes => {'ID' => 1, 'Unknown_term' => 'something'}))]
+      end
+      validator.run.should == <<-EOS.unindent
+        Illegal GFF3 attributes for '1'
+      EOS
+    end
   end
 
   describe "#validate_for_duplicate_ids" do
@@ -214,6 +223,67 @@ describe GenomerPluginValidate::Annotations do
 
     end
 
+  end
+
+  describe "#validate_for_gff3_attributes" do
+
+    subject do
+      described_class.new([],{}).validate_for_gff3_attributes(annotations)
+    end
+
+    describe "where there are no annotations" do
+
+      let(:annotations) do
+        []
+      end
+
+      it "should return no annotations" do
+        subject.should be_empty
+      end
+
+    end
+
+    attrs = %w|ID Name Alias Parent Target Gap Derives_from Note Dbxref Ontology_term Is_circular |
+    attrs.each do |attr|
+
+      describe "where an annotation has the #{attr} attribute" do
+
+        let(:annotations) do
+          [annotation(duplicate.merge({:attributes => {attr => 'something'}}))]
+        end
+
+        it "should return false" do
+          subject.should be_empty
+        end
+
+      end
+
+    end
+
+    describe "where there are lower case attribute keys" do
+
+      let(:annotations) do
+        [annotation(duplicate.merge({:attributes => {'lower_case' => 'something'}}))]
+      end
+
+      it "should return no annotations" do
+        subject.should == []
+      end
+
+    end
+
+    describe "where there is a unknown capitalised attribute keys" do
+
+      let(:annotations) do
+        [annotation(duplicate),
+         annotation(duplicate.merge({:attributes => {'Unknown_term' => 'something'}}))]
+      end
+
+      it "should return the annotation" do
+        subject.should == annotations[1..1]
+      end
+
+    end
   end
 
 end
