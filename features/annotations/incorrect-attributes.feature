@@ -33,7 +33,7 @@ Feature: Validating annotation files for incorrect attributes
         contig1	.	gene	19	20	.	+	1	Ontology_term=something;ID=gene10
         contig1	.	gene	21	22	.	+	1	Is_circular=TRUE;ID=gene11
         contig1	.	gene	23	24	.	+	1	Unknown_term=something;ID=gene12
-        contig1	.	gene	23	24	.	+	1	unknown_lowercase_term=something;ID=gene13
+        contig1	.	gene	25	26	.	+	1	unknown_lowercase_term=something;ID=gene13
         """
       And I append to "Gemfile" with:
         """
@@ -77,7 +77,7 @@ Feature: Validating annotation files for incorrect attributes
         contig1	.	gene	17	18	.	+	1	Dbxref=something;ID=gene9
         contig1	.	gene	19	20	.	+	1	Ontology_term=something;ID=gene10
         contig1	.	gene	21	22	.	+	1	Is_circular=TRUE;ID=gene11
-        contig1	.	gene	23	24	.	+	1	unknown_lowercase_term=something;ID=gene13
+        contig1	.	gene	23	24	.	+	1	unknown_lowercase_term=something;ID=gene12
         """
       And I append to "Gemfile" with:
         """
@@ -88,6 +88,6 @@ Feature: Validating annotation files for incorrect attributes
       And the output should not contain "gene3"
       And the output should contain:
         """
-        Illegal view attribute for 'gene12'
+        Illegal view attributes for 'gene12'
 
         """
