@@ -6,8 +6,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Michael Barton"]
   s.email       = ["mail@michaelbarton.me.uk"]
   s.homepage    = ""
-  s.summary     = %q{TODO: Write a gem summary}
-  s.description = %q{TODO: Write a gem description}
+  s.summary     = %q{Validate assembly files for errors}
+  s.description = %q{Test assembly files for common errors which may lead to incorrect assembly}
 
   s.rubyforge_project = "genomer-plugin-validate"
 
