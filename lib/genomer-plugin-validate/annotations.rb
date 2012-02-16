@@ -2,8 +2,10 @@ require 'genomer-plugin-validate'
 
 class GenomerPluginValidate::Annotations < Genomer::Plugin
 
-    GFF3_KEYS = %w|ID Name Alias Parent Target Gap Derives_from Note Dbxref
+  GFF3_KEYS = %w|ID Name Alias Parent Target Gap Derives_from Note Dbxref
       Ontology_term Is_circular|
+
+  VIEW_KEYS = %w|product function ec_number|
 
   VALIDATORS = {
     :validate_for_duplicate_ids => lambda{|i| "Duplicate ID '#{i.id}'" },
@@ -42,6 +44,12 @@ class GenomerPluginValidate::Annotations < Genomer::Plugin
   def validate_for_gff3_attributes(attns)
     attns.select do |attn|
       ! Hash[attn.attributes].keys.grep(/^[A-Z]/).all?{|k| GFF3_KEYS.include? k }
+    end
+  end
+
+  def validate_for_view_attributes(attns)
+    attns.select do |attn|
+      ! Hash[attn.attributes].keys.grep(/^[a-z]/).all?{|k| VIEW_KEYS.include? k }
     end
   end
 

@@ -286,4 +286,65 @@ describe GenomerPluginValidate::Annotations do
     end
   end
 
+  describe "#validate_for_view_attributes" do
+
+    subject do
+      described_class.new([],{}).validate_for_view_attributes(annotations)
+    end
+
+    describe "where there are no annotations" do
+
+      let(:annotations) do
+        []
+      end
+
+      it "should return no annotations" do
+        subject.should be_empty
+      end
+
+    end
+
+    attrs = %w|product ec_number function|
+    attrs.each do |attr|
+
+      describe "where an annotation has the #{attr} attribute" do
+
+        let(:annotations) do
+          [annotation(duplicate.merge({:attributes => {attr => 'something'}}))]
+        end
+
+        it "should return no annotations" do
+          subject.should be_empty
+        end
+
+      end
+
+    end
+
+    describe "where there are upper case attribute keys" do
+
+      let(:annotations) do
+        [annotation(duplicate.merge({:attributes => {'Lower_case' => 'something'}}))]
+      end
+
+      it "should return no annotations" do
+        subject.should == []
+      end
+
+    end
+
+    describe "where there is a unknown lower case attribute keys" do
+
+      let(:annotations) do
+        [annotation(duplicate),
+         annotation(duplicate.merge({:attributes => {'unknown_term' => 'something'}}))]
+      end
+
+      it "should return the annotation" do
+        subject.should == annotations[1..1]
+      end
+
+    end
+  end
+
 end
