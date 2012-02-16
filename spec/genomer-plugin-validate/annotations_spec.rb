@@ -52,6 +52,25 @@ describe GenomerPluginValidate::Annotations do
         Illegal GFF3 attributes for '1'
       EOS
     end
+
+    it "should not return an error for invalid lowercase attribute keys without arg" do
+      validator = described_class.new([],{})
+      stub(validator).annotations do
+        [annotation(duplicate.merge(:attributes => {'ID' => 1, 'unknown_term' => 'something'}))]
+      end
+      validator.run.should == "\n"
+    end
+
+    it "should return an error for invalid lower case attribute keys with arg" do
+      validator = described_class.new([],{:validate_for_view => true})
+      stub(validator).annotations do
+        [annotation(duplicate.merge(:attributes => {'ID' => 1, 'unknown_term' => 'something'}))]
+      end
+      validator.run.should == <<-EOS.unindent
+        Illegal view attributes for '1'
+      EOS
+    end
+
   end
 
   describe "#validate_for_duplicate_ids" do
@@ -277,6 +296,67 @@ describe GenomerPluginValidate::Annotations do
       let(:annotations) do
         [annotation(duplicate),
          annotation(duplicate.merge({:attributes => {'Unknown_term' => 'something'}}))]
+      end
+
+      it "should return the annotation" do
+        subject.should == annotations[1..1]
+      end
+
+    end
+  end
+
+  describe "#validate_for_view_attributes" do
+
+    subject do
+      described_class.new([],{}).validate_for_view_attributes(annotations)
+    end
+
+    describe "where there are no annotations" do
+
+      let(:annotations) do
+        []
+      end
+
+      it "should return no annotations" do
+        subject.should be_empty
+      end
+
+    end
+
+    attrs = %w|product ec_number function|
+    attrs.each do |attr|
+
+      describe "where an annotation has the #{attr} attribute" do
+
+        let(:annotations) do
+          [annotation(duplicate.merge({:attributes => {attr => 'something'}}))]
+        end
+
+        it "should return no annotations" do
+          subject.should be_empty
+        end
+
+      end
+
+    end
+
+    describe "where there are upper case attribute keys" do
+
+      let(:annotations) do
+        [annotation(duplicate.merge({:attributes => {'Lower_case' => 'something'}}))]
+      end
+
+      it "should return no annotations" do
+        subject.should == []
+      end
+
+    end
+
+    describe "where there is a unknown lower case attribute keys" do
+
+      let(:annotations) do
+        [annotation(duplicate),
+         annotation(duplicate.merge({:attributes => {'unknown_term' => 'something'}}))]
       end
 
       it "should return the annotation" do

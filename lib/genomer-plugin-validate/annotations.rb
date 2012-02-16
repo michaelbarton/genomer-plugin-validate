@@ -2,13 +2,16 @@ require 'genomer-plugin-validate'
 
 class GenomerPluginValidate::Annotations < Genomer::Plugin
 
-    GFF3_KEYS = %w|ID Name Alias Parent Target Gap Derives_from Note Dbxref
+  GFF3_KEYS = %w|ID Name Alias Parent Target Gap Derives_from Note Dbxref
       Ontology_term Is_circular|
 
+  VIEW_KEYS = %w|product function ec_number|
+
   VALIDATORS = {
-    :validate_for_duplicate_ids => lambda{|i| "Duplicate ID '#{i.id}'" },
+    :validate_for_duplicate_ids   => lambda{|i| "Duplicate ID '#{i.id}'" },
     :validate_for_gff3_attributes => lambda{|i| "Illegal GFF3 attributes for '#{i.id}'" },
-    :validate_for_missing_ids   => lambda{|_| "Annotations found with missing ID attribute" },
+    :validate_for_view_attributes => lambda{|i| "Illegal view attributes for '#{i.id}'" },
+    :validate_for_missing_ids     => lambda{|_| "Annotations found with missing ID attribute" },
     :validate_for_identical_locations => lambda do |attns|
       "Identical locations for " << attns.map{|i| "'#{i.id}'"}.sort.join(', ')
     end
@@ -16,8 +19,9 @@ class GenomerPluginValidate::Annotations < Genomer::Plugin
 
   def run
     VALIDATORS.map do |(method,formatter)|
+      next if method == :validate_for_view_attributes && flags[:validate_for_view].nil?
       send(method,annotations).map{|i| formatter.call(i)}
-    end.flatten.uniq * "\n" + "\n"
+    end.flatten.compact.uniq * "\n" + "\n"
   end
 
   def organise_by(annotations,&block)
@@ -42,6 +46,12 @@ class GenomerPluginValidate::Annotations < Genomer::Plugin
   def validate_for_gff3_attributes(attns)
     attns.select do |attn|
       ! Hash[attn.attributes].keys.grep(/^[A-Z]/).all?{|k| GFF3_KEYS.include? k }
+    end
+  end
+
+  def validate_for_view_attributes(attns)
+    attns.select do |attn|
+      ! Hash[attn.attributes].keys.grep(/^[a-z]/).all?{|k| VIEW_KEYS.include? k }
     end
   end
 
