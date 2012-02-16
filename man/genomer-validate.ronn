@@ -12,37 +12,66 @@ are reported to the terminal.
 
 ## OPTIONS
 
-  * `--genbank`
-    When testing annotation files the GFF ninth-column attribute row is tested 
-    to ensure that the attribute keys only include those allowed in the genbank 
-    file format.
+  * `--validate_for_view`
+    the GFF ninth-column attributes are validated to ensure that all attributes 
+    beginning with a lower case character match those used by 
+    genomer-plugin-view to generate GenBank annotation table output.
 
 ## FILE TYPES
 
 ### ANNOTATIONS
 
 Test the annotation file for errors. The default location for this file is 
-**assembly/annotations.gff**. The following checks are made on the annotation 
-file.
+**assembly/annotations.gff**. The following validations are performed:.
 
   * `Identical locations`:
     Flag annotations of the same type with identical start and end coordinates.
 
   * `Identical IDs`:
-    Flag annotations with the same ID attribute.
+    Flag two or more annotations identical ID attributes.
 
   * `Missing ID`:
     Flag annotations without an ID attribute.
 
   * `Invalid GFF Attributes`:
     Flag annotations with capitalised attribute keys outside of the GFF3 
-    vocabulary.
+    vocabulary. See below for a description of this vocabulary.
 
-  * `Invalid Genbank Attributes (optional)`:
-    Flag annotations with attribute keys outside of the genbank vocabulary. 
-    This check is only performed if specified with the `--genbank` command line 
-    flag.
+  * `Invalid Genomer Plugin View Attributes (optional)`:
+    Flag annotations with attribute keys outside of the genomer-plugin-view 
+    vocabulary. This check is only performed if specified with the 
+    `--validate_for_view` command line flag.
 
+The [GFF3 specification][http://www.sequenceontology.org/gff3.shtml] restricts 
+attributes beginning with an upper case character (A-Z) in the ninth column to 
+a controlled vocabulary. Any attribute keys appearing in the ninth column not 
+included in this vocabulary will raise a validation error. The allowed keys are 
+listed below. The ID field is considered mandatory in this software and will 
+raise an error if not present.
+
+  * ID
+  * Name
+  * Note
+  * Alias
+  * Parent
+  * Target
+  * Gap
+  * Derives\_from
+  * Dbxref
+  * Ontology\_term
+  * Is\_circular
+
+Any fields beginning with a lower case character (a-z) are allowed in the GFF3 
+ninth column. Therefore any attributes can be added to this column as long as 
+they match this requirement. The genomer-plugin-view allows the use of 
+additional fields to populate fields in the GenBank annotation table. The 
+optional `--validate_for_view` flag can be used to ensure that all lower case 
+attribute flags match only those used by genomer-plugin-view. The allowed 
+attribute keys are as follows:
+
+  * product
+  * ec\_number
+  * function
 
 ## EXAMPLES
 
@@ -50,13 +79,9 @@ Test that the annotation file is error free.
 
     $ genomer validate annotations
 
-Test that the genome scaffold file is error free.
-
-    $ genomer validate scaffold
-
-
 **Genomer-validate** is written in Ruby and depends on the genomer gem. See the 
-Gemfile in the genomer-plugin-validate gem install directory for version details.
+Gemfile in the genomer-plugin-validate gem install directory for version 
+details.
 
 ## COPYRIGHT
 
