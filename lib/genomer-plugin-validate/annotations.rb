@@ -12,6 +12,9 @@ class GenomerPluginValidate::Annotations < Genomer::Plugin
     :validate_for_gff3_attributes => lambda{|i| "Illegal GFF3 attributes for '#{i.id}'" },
     :validate_for_view_attributes => lambda{|i| "Illegal view attributes for '#{i.id}'" },
     :validate_for_missing_ids     => lambda{|_| "Annotations found with missing ID attribute" },
+    :validate_for_missing_name_or_product => lambda do |i|
+        "No 'Name' or 'product' field for annotation '#{i.id}'"
+    end,
     :validate_for_identical_locations => lambda do |attns|
       "Identical locations for " << attns.map{|i| "'#{i.id}'"}.sort.join(', ')
     end
@@ -53,6 +56,11 @@ class GenomerPluginValidate::Annotations < Genomer::Plugin
     attns.select do |attn|
       ! Hash[attn.attributes].keys.grep(/^[a-z]/).all?{|k| VIEW_KEYS.include? k }
     end
+  end
+
+  def validate_for_missing_name_or_product(attns)
+    filter = lambda{|i| i.attributes.select{|(k,v)| k =~ /Name|product/ }  }
+    organise_by(attns,&filter).select{|(k,v)| k.nil? }.values.flatten
   end
 
 end
