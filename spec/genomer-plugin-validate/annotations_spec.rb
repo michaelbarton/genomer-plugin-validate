@@ -6,9 +6,9 @@ describe GenomerPluginValidate::Annotations do
   def annotation(options = {})
     Annotation.new(options).to_gff3_record
   end
-  
+
   let(:duplicate) do
-    {:attributes => {'ID' => '1'}, :start => 1, :end => 3}
+    {:attributes => {'ID' => '1', 'product' => 'something'}, :start => 1, :end => 3}
   end
 
   describe "#run" do
@@ -22,11 +22,13 @@ describe GenomerPluginValidate::Annotations do
         Duplicate ID '1'
       EOS
     end
-    
+
     it "should return an error for identical annotation locations" do
       validator = described_class.new([],{})
       stub(validator).annotations do
-        [annotation(duplicate), annotation(duplicate.merge(:attributes => {'ID' => 2}))]
+        [annotation(duplicate),
+          annotation(duplicate.merge(
+           :attributes => {'ID' => 2, 'Name' => 'something'}))]
       end
       validator.run.should == <<-EOS.unindent
         Identical locations for '1', '2'
@@ -36,17 +38,28 @@ describe GenomerPluginValidate::Annotations do
     it "should return an error for missing ID attributes" do
       validator = described_class.new([],{})
       stub(validator).annotations do
-        [annotation(duplicate.merge(:attributes => {}))]
+        [annotation(duplicate.merge(:attributes => {'Name' => 'something'}))]
       end
       validator.run.should == <<-EOS.unindent
         Annotations found with missing ID attribute
       EOS
     end
 
+    it "should return an error for missing Name and product attributes" do
+      validator = described_class.new([],{})
+      stub(validator).annotations do
+        [annotation(duplicate.merge(:attributes => {'ID' => 1}))]
+      end
+      validator.run.should == <<-EOS.unindent
+        No 'Name' or 'product' field for annotation '1'
+      EOS
+    end
+
     it "should return an error for invalide uppercase attribute keys" do
       validator = described_class.new([],{})
       stub(validator).annotations do
-        [annotation(duplicate.merge(:attributes => {'ID' => 1, 'Unknown_term' => 'something'}))]
+        [annotation(duplicate.merge(:attributes => {
+          'ID' => 1, 'product' => 'something','Unknown_term' => 'something'}))]
       end
       validator.run.should == <<-EOS.unindent
         Illegal GFF3 attributes for '1'
@@ -56,7 +69,8 @@ describe GenomerPluginValidate::Annotations do
     it "should not return an error for invalid lowercase attribute keys without arg" do
       validator = described_class.new([],{})
       stub(validator).annotations do
-        [annotation(duplicate.merge(:attributes => {'ID' => 1, 'unknown_term' => 'something'}))]
+        [annotation(duplicate.merge(:attributes => {
+          'ID' => 1, 'product' => 'something','unknown_term' => 'something'}))]
       end
       validator.run.should == "\n"
     end
@@ -64,7 +78,8 @@ describe GenomerPluginValidate::Annotations do
     it "should return an error for invalid lower case attribute keys with arg" do
       validator = described_class.new([],{:validate_for_view => true})
       stub(validator).annotations do
-        [annotation(duplicate.merge(:attributes => {'ID' => 1, 'unknown_term' => 'something'}))]
+        [annotation(duplicate.merge(:attributes => {
+          'ID' => 1, 'product' => 'something','unknown_term' => 'something'}))]
       end
       validator.run.should == <<-EOS.unindent
         Illegal view attributes for '1'
@@ -238,6 +253,74 @@ describe GenomerPluginValidate::Annotations do
 
       it "should return true" do
         subject.should == annotations[1..1]
+      end
+
+    end
+
+  end
+
+  describe "#validate_for_missing_name_or_product" do
+
+    subject do
+      described_class.new([],{}).validate_for_missing_name_or_product(annotations)
+    end
+
+    describe "where there are no annotations" do
+
+      let(:annotations) do
+        []
+      end
+
+      it "should return no annotations" do
+        subject.should be_empty
+      end
+
+    end
+
+    describe "where an annotation does have a Name attribute" do
+
+      let(:annotations) do
+        [annotation({:attributes => {'Name' => 'something'}})]
+      end
+
+      it "should return false" do
+        subject.should be_empty
+      end
+
+    end
+
+    describe "where an annotation does have a product attribute" do
+
+      let(:annotations) do
+        [annotation({:attributes => {'product' => 'something'}})]
+      end
+
+      it "should return false" do
+        subject.should be_empty
+      end
+
+    end
+
+    describe "where an annotation has both a Name and product attribute" do
+
+      let(:annotations) do
+        [annotation({:attributes => {'product' => 'something','product' => 'else'}})]
+      end
+
+      it "should return false" do
+        subject.should be_empty
+      end
+
+    end
+
+    describe "where an annotation has neither a Name or product attribute" do
+
+      let(:annotations) do
+        [annotation({:attributes => {'ID' => '1'}})]
+      end
+
+      it "should return true" do
+        subject.should == annotations
       end
 
     end
