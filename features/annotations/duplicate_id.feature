@@ -83,11 +83,11 @@ Feature: Validating annotation files for duplicate IDs
       And I write to "assembly/annotations.gff" with:
         """
         ##gff-version 3
-        contig1	.	gene	1	3	.	+	1	ID=gene1
-        contig1	.	gene	4	6	.	+	1	ID=gene1
-        contig1	.	gene	7	9	.	+	1	ID=gene2
-        contig1	.	gene	10	12	.	+	1	ID=gene2
-        contig1	.	gene	13	15	.	+	1	ID=gene3
+        contig1	.	gene	1	3	.	+	1	ID=gene1;Name=abc
+        contig1	.	gene	4	6	.	+	1	ID=gene1;Name=abc
+        contig1	.	gene	7	9	.	+	1	ID=gene2;Name=abc
+        contig1	.	gene	10	12	.	+	1	ID=gene2;Name=abc
+        contig1	.	gene	13	15	.	+	1	ID=gene3;Name=abc
         """
       And I append to "Gemfile" with:
         """
