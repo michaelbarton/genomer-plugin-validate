@@ -1,4 +1,4 @@
-Feature: The valid annotations command line interface
+Feature: The validate annotations command line interface
   In order to generate correct genome annotation files
   A user can use the "validator" plugin at the command line
   to validate their annotations
