@@ -15,5 +15,5 @@ Feature: The valid annotations command line interface
      Then the exit status should be 0
       And the output should contain:
       """
-      annotations    Validation GFF3 annotations file
+        annotations    Validate GFF3 annotations file
       """
