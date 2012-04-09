@@ -37,16 +37,6 @@ describe GenomerPluginValidate do
 
   end
 
-  describe "#validator_names_to_classes" do
-
-    subject do
-      described_class.validator_names_to_classes
-    end
-
-    its(['example']){should ==  @example}
-
-  end
-
   describe "#validator_classes_for_names" do
 
     subject do

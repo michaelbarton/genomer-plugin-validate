@@ -14,27 +14,13 @@ class GenomerPluginValidate < Genomer::Plugin
     end
   end
 
-  def self.load_validator_groups
-    path = File.join(File.dirname(__FILE__),'genomer-plugin-validate','group','*')
-    Dir[path].each do |i|
-      require i if i =~ /\.rb/
-    end
-  end
-
-  def self.validator_names_to_classes
-    load_validator_groups
-    Hash[GenomerPluginValidate::Group.constants.map do |name|
-      [name.to_s.downcase,GenomerPluginValidate::Group.const_get(name)]
-    end]
-  end
-
   def self.help_message
     msg = <<-EOS.unindent
       USAGE: genomer validate <GROUP>
       
       Available validation groups:
     EOS
-    msg << validator_names_to_classes.map do |(k,v)|
+    msg << GenomerPluginValidate::Group.groups.map do |(k,v)|
       str =  '  '
       str << k.ljust(15)
       str << v.description
