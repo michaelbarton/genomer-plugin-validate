@@ -6,12 +6,11 @@ class GenomerPluginValidate < Genomer::Plugin
   require 'genomer-plugin-validate/group'
 
   def run
-    if validator = arguments.shift
-      require 'genomer-plugin-validate/' + validator
-      self.class.const_get(validator.capitalize).new(arguments,flags).run
-    else
-      self.class.help_message
-    end
+    name = arguments.shift
+    return self.class.help_message if name.nil?
+
+    validator = GenomerPluginValidate::Group.groups[name]
+    raise Genomer::Error, "Unknown validation group '#{name}'" if validator.nil?
   end
 
   def self.help_message

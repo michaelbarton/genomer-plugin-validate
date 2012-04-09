@@ -15,7 +15,15 @@ describe GenomerPluginValidate do
 
   describe "#run" do
 
+    subject do
+      described_class.new([arg].compact,{}).run
+    end
+
     context "passed no arguments" do
+
+      let(:arg) do
+        nil
+      end
 
       before do
         def @example.description
@@ -29,12 +37,25 @@ describe GenomerPluginValidate do
           
           Available validation groups:
         EOS
-        described_class.new([],{}).run.should include msg.unindent
+        subject.should include msg.unindent
       end
 
       it "should include the descriptions annotation groups" do
         msg = '  example        Some description'
-        described_class.new([],{}).run.should include msg.unindent
+        subject.should include msg
+      end
+
+    end
+
+    context "passed an unknown validation group name" do
+
+      let(:arg) do
+        "unknown"
+      end
+
+      it "should raise and Genomer::Error" do
+        lambda{subject.to_s}.should raise_error Genomer::Error,
+          "Unknown validation group 'unknown'"
       end
 
     end
