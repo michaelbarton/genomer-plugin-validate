@@ -15,7 +15,7 @@ Feature: The validator command line interface
      Then the exit status should be 0
       And the output should contain:
       """
-        USAGE: genomer validate <GROUP>
+      USAGE: genomer validate <GROUP>
 
-        Available validation groups:
+      Available validation groups:
       """
