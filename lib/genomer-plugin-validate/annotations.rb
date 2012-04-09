@@ -20,6 +20,10 @@ class GenomerPluginValidate::Annotations < Genomer::Plugin
     end
   }
 
+  def self.description
+    "Validation GFF3 annotations file"
+  end
+
   def run
     VALIDATORS.map do |(method,formatter)|
       next if method == :validate_for_view_attributes && flags[:validate_for_view].nil?
