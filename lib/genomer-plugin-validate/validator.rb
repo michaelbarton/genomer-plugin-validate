@@ -1,0 +1,2 @@
+module GenomerPluginValidate::Validator
+end
