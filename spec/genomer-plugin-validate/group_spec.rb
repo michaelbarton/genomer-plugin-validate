@@ -7,6 +7,10 @@ describe GenomerPluginValidate::Group do
     stub(described_class).require(anything)
   end
 
+  after do
+    GenomerPluginValidate::Group.send(:remove_const,'Example')
+  end
+
   describe "#groups" do
 
     subject do
