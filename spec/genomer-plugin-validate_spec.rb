@@ -63,4 +63,42 @@ describe GenomerPluginValidate do
 
   end
 
+  describe "#validator_names" do
+
+    subject do
+      described_class.validator_names validator_name
+    end
+
+    context "passed the name of an existing class" do
+
+      before do
+        mock(described_class).require('genomer-plugin-validate/example')
+        class GenomerPluginValidate::Example
+          VALIDATORS = [:something]
+        end
+      end
+
+      let(:validator_name) do
+        'example'
+      end
+
+      it {should == [:something]}
+
+    end
+
+    context "passed the name of an unknown file" do
+
+      let(:validator_name) do
+        'unknown'
+      end
+
+      it "should raise a Genomer::Error" do
+        lambda{ subject.to_s }.should raise_error Genomer::Error,
+          "Unknown validator group: 'unknown'"
+      end
+
+    end
+
+  end
+
 end

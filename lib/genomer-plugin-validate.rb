@@ -19,4 +19,13 @@ class GenomerPluginValidate < Genomer::Plugin
     end
   end
 
+  def self.validator_names(class_name)
+      begin
+        require 'genomer-plugin-validate/' + class_name
+        const_get(class_name.capitalize).const_get(:VALIDATORS)
+      rescue LoadError
+        raise Genomer::Error, "Unknown validator group: '#{class_name}'"
+      end
+  end
+
 end
