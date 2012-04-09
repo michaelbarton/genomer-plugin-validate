@@ -3,7 +3,7 @@ require 'spec_helper'
 describe GenomerPluginValidate do
 
   before do
-    @example = GenomerPluginValidate::Example = Class.new(GenomerPluginValidate)
+    @example = GenomerPluginValidate::Group::Example = Class.new
     any_instance_of(described_class) do |u|
       stub(u).require(anything)
     end
@@ -31,15 +31,6 @@ describe GenomerPluginValidate do
       it "should include the descriptions annotation groups" do
         msg = '  example        Some description'
         described_class.new([],{}).run.should include msg.unindent
-      end
-
-    end
-
-    context "passed the name of a known validation group" do
-
-      it "should initialize and call run on the required plugin" do
-        any_instance_of(@example){ |u| mock(u).run }
-        described_class.new(['example'],{}).run
       end
 
     end

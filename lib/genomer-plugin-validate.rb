@@ -3,6 +3,7 @@ require "heredoc_unindent"
 
 class GenomerPluginValidate < Genomer::Plugin
   require 'genomer-plugin-validate/validator'
+  require 'genomer-plugin-validate/group'
 
   def run
     if validator = arguments.shift
@@ -14,15 +15,16 @@ class GenomerPluginValidate < Genomer::Plugin
   end
 
   def self.load_validator_groups
-    Dir[File.join(File.dirname(__FILE__),'genomer-plugin-validate','*')].each do |i|
+    path = File.join(File.dirname(__FILE__),'genomer-plugin-validate','group','*')
+    Dir[path].each do |i|
       require i if i =~ /\.rb/
     end
   end
 
   def self.validator_names_to_classes
     load_validator_groups
-    Hash[GenomerPluginValidate.constants.map do |name|
-      [name.to_s.downcase,GenomerPluginValidate.const_get(name)]
+    Hash[GenomerPluginValidate::Group.constants.map do |name|
+      [name.to_s.downcase,GenomerPluginValidate::Group.const_get(name)]
     end]
   end
 
