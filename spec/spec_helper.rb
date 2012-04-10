@@ -14,7 +14,6 @@ RSpec.configure do |config|
   def annotation(options = {})
     attrs = options[:attributes] || {}
     attrs[:ID].to_s ||= '1'
-    attrs[:product] ||= 'abcD'
 
     opts = {:start      => options[:start] || 1,
             :end        => options[:end]   || 3,
