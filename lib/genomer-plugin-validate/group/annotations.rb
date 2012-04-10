@@ -4,4 +4,8 @@ class GenomerPluginValidate::Group::Annotations
     "Validate GFF3 annotations file"
   end
 
+  def self.validators
+    []
+  end
+
 end
