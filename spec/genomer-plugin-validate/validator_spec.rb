@@ -3,12 +3,12 @@ require 'spec_helper'
 describe GenomerPluginValidate::Validator do
 
   before do
-    @example = GenomerPluginValidate::Validator::Example = Class.new
+    @example = GenomerPluginValidate::Validator::ExampleValidator = Class.new
     stub(described_class).require(anything)
   end
 
   after do
-    GenomerPluginValidate::Validator.send(:remove_const,'Example')
+    GenomerPluginValidate::Validator.send(:remove_const,'ExampleValidator')
   end
 
   describe "#validators" do
@@ -17,7 +17,7 @@ describe GenomerPluginValidate::Validator do
       described_class.validators
     end
 
-    its(['example']){should ==  @example}
+    its([:example_validator]){should ==  @example}
 
   end
 

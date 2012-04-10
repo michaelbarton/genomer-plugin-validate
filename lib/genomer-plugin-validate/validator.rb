@@ -1,3 +1,5 @@
+require 'extensions/string'
+
 module GenomerPluginValidate::Validator
 
   def self.load
@@ -10,7 +12,7 @@ module GenomerPluginValidate::Validator
   def self.validators
     load
     Hash[constants.map do |name|
-      [name.to_s.downcase,const_get(name)]
+      [name.to_s.underscore.to_sym, const_get(name)]
     end]
   end
 
