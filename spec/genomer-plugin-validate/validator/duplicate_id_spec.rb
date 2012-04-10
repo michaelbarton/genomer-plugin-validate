@@ -52,6 +52,16 @@ describe GenomerPluginValidate::Validator::DuplicateID do
 
     end
 
+    describe "where there are annotations with a missing IDs" do
+
+      let(:annotations) do
+        [annotation_with_id(1), annotation_with_id(1),
+          Annotation.new.to_gff3_record, Annotation.new.to_gff3_record]
+      end
+
+      it{ should == ["Duplicate ID '1'"]}
+
+    end
 
   end
 

@@ -52,6 +52,18 @@ describe GenomerPluginValidate::Validator do
 
     end
 
+    context "where there is one annotation and one annotions with a missing ID" do
+
+      let(:annotations) do
+        [annotation_with_id(1), Annotation.new.to_gff3_record]
+      end
+
+      its(['1']){ should == annotations[0..0] }
+      its([nil]){ should == annotations[1..1] }
+
+    end
+
+
     context "where there is two annotations with different attributes" do
 
       let(:annotations) do

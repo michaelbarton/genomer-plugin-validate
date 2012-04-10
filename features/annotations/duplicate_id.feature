@@ -4,7 +4,7 @@ Feature: Validating annotation files for duplicate IDs
   to ensure that their annotation file contains no errors
 
   @disable-bundler
-  Scenario: Validating an annotations file with no duplicates
+  Scenario: No duplicate IDs
     Given I successfully run `genomer init project`
       And I cd to "project"
       And I write to "assembly/scaffold.yml" with:
@@ -30,10 +30,13 @@ Feature: Validating annotation files for duplicate IDs
         """
      When I run `genomer validate annotations`
      Then the exit status should be 0
-      And the output should not contain "WARN"
+      And the output should not contain:
+        """
+        Duplicate ID
+        """
 
   @disable-bundler
-  Scenario: Validating an annotations file two duplicate ID attributes
+  Scenario: Two duplicate IDs
     Given I successfully run `genomer init project`
       And I cd to "project"
       And I write to "assembly/scaffold.yml" with:
@@ -62,11 +65,10 @@ Feature: Validating annotation files for duplicate IDs
       And the output should contain:
         """
         Duplicate ID 'gene1'
-
         """
 
   @disable-bundler
-  Scenario: Validating an annotations file multiple duplicate ID attributes
+  Scenario: Multiple duplicate IDs
     Given I successfully run `genomer init project`
       And I cd to "project"
       And I write to "assembly/scaffold.yml" with:
@@ -100,5 +102,43 @@ Feature: Validating annotation files for duplicate IDs
         """
         Duplicate ID 'gene1'
         Duplicate ID 'gene2'
-
         """
+
+  @disable-bundler
+  Scenario: Two duplicate IDs and a annotations with missing IDs
+    Given I successfully run `genomer init project`
+      And I cd to "project"
+      And I write to "assembly/scaffold.yml" with:
+        """
+        ---
+          - sequence:
+              source: contig1
+        """
+      And I write to "assembly/sequence.fna" with:
+        """
+        >contig1
+        AAAAATTTTTGGGGGCCCCC
+        """
+      And I write to "assembly/annotations.gff" with:
+        """
+        ##gff-version 3
+        contig1	.	gene	1	3	.	+	1	ID=gene1
+        contig1	.	gene	4	6	.	+	1	ID=gene1
+        contig1	.	gene	7	9	.	+	1	
+        contig1	.	gene	10	12	.	+	1	
+        """
+      And I append to "Gemfile" with:
+        """
+        gem 'genomer-plugin-validate', :path => '../../../'
+        """
+     When I run `genomer validate annotations`
+     Then the exit status should be 0
+      And the output should contain:
+        """
+        Duplicate ID 'gene1'
+        """
+      And the output should not contain:
+        """
+        Duplicate ID ''
+        """
+
