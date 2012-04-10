@@ -18,7 +18,7 @@ module GenomerPluginValidate::Validator
 
   def annotations_by_attribute(attr)
     annotations.inject(Hash.new{|h,k| h[k] = []}) do |hash,attn|
-      attr_value = attn.get_attribute('ID') ? attn.get_attribute('ID').to_s : nil
+      attr_value = attn.get_attribute(attr) ? attn.get_attribute(attr).to_s : nil
       hash[attr_value] <<= attn
       hash
     end

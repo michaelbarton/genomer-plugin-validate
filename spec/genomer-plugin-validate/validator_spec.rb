@@ -29,7 +29,11 @@ describe GenomerPluginValidate::Validator do
 
        dummy = dummy_class.new
        stub(dummy).annotations{annotations}
-       dummy.annotations_by_attribute('ID')
+       dummy.annotations_by_attribute(attribute)
+    end
+
+    let(:attribute) do
+      'ID'
     end
 
     context "where there are no annotations" do
@@ -42,10 +46,24 @@ describe GenomerPluginValidate::Validator do
 
     end
 
-    context "where there is one annotation" do
+    context "where there is one annotation using the ID attribute" do
 
       let(:annotations) do
         [annotation_with_id(1)]
+      end
+
+      its(['1']){ should == annotations }
+
+    end
+
+    context "where there is one annotation using the product attribute" do
+
+      let(:attribute) do
+        'product'
+      end
+
+      let(:annotations) do
+        [annotation(:attributes => {:product => '1'})]
       end
 
       its(['1']){ should == annotations }
@@ -62,7 +80,6 @@ describe GenomerPluginValidate::Validator do
       its([nil]){ should == annotations[1..1] }
 
     end
-
 
     context "where there is two annotations with different attributes" do
 
