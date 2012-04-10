@@ -62,7 +62,7 @@ describe GenomerPluginValidate do
       let(:validator) do
         c = Class.new(Genomer::Plugin)
         any_instance_of(c) do |instance|
-          mock(instance).run
+          mock(instance).run{ [['some_error_1', 'some_error_2'],['another_error_1']]}
         end
         c
       end
@@ -77,8 +77,12 @@ describe GenomerPluginValidate do
         "example"
       end
 
-      it "should initialize and call #run method for each validator" do
-        subject.to_s
+      it "should return a string output of validation error array" do
+        subject.should ==<<-EOS.unindent.strip
+           some_error_1
+           some_error_2
+           another_error_1
+        EOS
       end
 
     end

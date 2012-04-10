@@ -11,9 +11,10 @@ class GenomerPluginValidate < Genomer::Plugin
 
     group = Group.groups[name]
     raise Genomer::Error, "Unknown validation group '#{name}'" if group.nil?
-    group.validators.map{|i| Validator.validators[i]}.each do |v|
+
+    group.validators.map{|i| Validator.validators[i]}.map do |v|
       v.new(arguments,flags).run
-    end
+    end.flatten * "\n"
   end
 
   def self.help_message
