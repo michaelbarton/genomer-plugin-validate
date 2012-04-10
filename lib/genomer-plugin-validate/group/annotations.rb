@@ -5,7 +5,8 @@ class GenomerPluginValidate::Group::Annotations
   end
 
   def self.validators
-    [:duplicate_id]
+    [:duplicate_id,
+     :missing_id]
   end
 
 end

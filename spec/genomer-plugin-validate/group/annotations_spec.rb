@@ -7,5 +7,6 @@ describe GenomerPluginValidate::Group::Annotations do
 
   its("class.validators"){ should be_instance_of Array }
   its("class.validators"){ should include :duplicate_id }
+  its("class.validators"){ should include :missing_id }
 
 end
