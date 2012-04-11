@@ -9,5 +9,6 @@ describe GenomerPluginValidate::Group::Annotations do
   its("class.validators"){ should include :duplicate_id }
   its("class.validators"){ should include :missing_id }
   its("class.validators"){ should include :no_name_or_product }
+  its("class.validators"){ should include :gff3_attributes }
 
 end

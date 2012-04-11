@@ -8,7 +8,8 @@ class GenomerPluginValidate::Group::Annotations
     [
       :duplicate_id,
       :missing_id,
-      :no_name_or_product
+      :no_name_or_product,
+      :gff3_attributes
     ]
   end
 

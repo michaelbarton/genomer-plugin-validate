@@ -41,11 +41,9 @@ Feature: Validating annotation files for incorrect attributes
         """
      When I run `genomer validate annotations`
      Then the exit status should be 0
-      And the output should not contain "gene13"
       And the output should contain:
         """
-        Illegal GFF3 attributes for 'gene12'
-
+        Illegal GFF3 attribute 'Unknown_term' for 'gene12'
         """
 
   Scenario: Validating an annotations file with unknown genomer-plugin-view attributes
@@ -85,9 +83,7 @@ Feature: Validating annotation files for incorrect attributes
         """
      When I run `genomer validate annotations --validate_for_view`
      Then the exit status should be 0
-      And the output should not contain "gene3"
       And the output should contain:
         """
         Illegal view attributes for 'gene12'
-
         """
