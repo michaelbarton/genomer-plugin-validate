@@ -85,5 +85,5 @@ Feature: Validating annotation files for incorrect attributes
      Then the exit status should be 0
       And the output should contain:
         """
-        Illegal view attributes for 'gene12'
+        Illegal view attribute 'unknown_lowercase_term' for 'gene12
         """
