@@ -3,60 +3,30 @@ require 'genomer-plugin-validate/validator/gff3_attributes'
 
 describe GenomerPluginValidate::Validator::Gff3Attributes do
 
-  describe "#run" do
+  subject{ described_class }
 
-    subject do
-      c = described_class.new([],{})
-      stub(c).annotations{ annotations }
-      c.run
-    end
+  describe "where there are no annotations" do
+    it{ should return_no_errors_for [] }
+  end
 
-    describe "where there are no annotations" do
-
-      let(:annotations) do
-        []
-      end
-
-      it{ should be_empty }
-
-    end
-
-    attrs = %w|ID Name Alias Parent Target Gap Derives_from Note Dbxref Ontology_term Is_circular |
+  describe "where there are valid GFF3 attributes" do
+    attrs = %w|ID Name Alias Parent Target Gap Derives_from
+               Note Dbxref Ontology_term Is_circular|
     attrs.each do |attr|
-
-      describe "where an annotation has the #{attr} attribute" do
-
-        let(:annotations) do
-          [annotation({:attributes => {attr => 'something'}})]
-        end
-
-        it{should be_empty}
-
-      end
-
+      attns = [annotation({:attributes => {attr => 'something'}})]
+      it{ should return_no_errors_for attns}
     end
+  end
 
-    describe "where there are lower case attribute keys" do
+  describe "where there are lower case attribute keys" do
+    attns = [annotation({:attributes => {'unknown_term' => 'something'}})]
+    it{ should return_no_errors_for attns}
+  end
 
-      let(:annotations) do
-        [annotation({:attributes => {'lower_case' => 'something'}})]
-      end
-
-      it{should be_empty}
-
-    end
-
-    describe "where there is a unknown capitalised attribute key" do
-
-      let(:annotations) do
-        [annotation,
-         annotation({:attributes => {'Unknown_term' => 'something', 'ID' => '2'}})]
-      end
-
-      it{should include "Illegal GFF3 attribute 'Unknown_term' for '2'"}
-
-    end
-
+  describe "where there is an unknown capitalised attribute key" do
+    attns =  [annotation({:attributes => {'Unknown_term' => 'something','ID' => 1}})]
+    errors = ["Illegal GFF3 attribute 'Unknown_term' for '1'"]
+    it{ should return_errors_for attns, errors}
   end
 
 end
