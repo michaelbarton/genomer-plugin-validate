@@ -5,14 +5,12 @@ class GenomerPluginValidate::Validator::Gff3Attributes < Genomer::Plugin
       Dbxref Ontology_term Is_circular|
   end
 
-  def invalid_attributes(attn)
-    Hash[attn.attributes].keys.grep(/^[A-Z]/) - valid_gff3_attributes
-  end
-
   def run
     annotations.
-      map{|attn| invalid_attributes(attn).map{|attr| [attn.id,attr]} }.
+      map{|attn| attn.attributes.map{|(k,v)| [k,attn] }}.
       flatten(1).
-      map{|(id,attribute)| "Illegal GFF3 attribute '#{attribute}' for '#{id}'"}
+      select{|(term,_)| term =~ (/^[A-Z]/) }.
+      reject{|(term,_)| valid_gff3_attributes.include? term }.
+      map{|(term,attn)| "Illegal GFF3 attribute '#{term}' for '#{attn.id}'"}
   end
 end
