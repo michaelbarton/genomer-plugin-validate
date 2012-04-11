@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'validator_run_matcher'
 require 'genomer-plugin-validate/validator/duplicate_id'
 
 describe GenomerPluginValidate::Validator::DuplicateID do

@@ -5,6 +5,7 @@ require 'rspec'
 require 'scaffolder/test/helpers'
 require 'heredoc_unindent'
 require 'genomer-plugin-validate'
+require 'validator_run_matcher'
 
 RSpec.configure do |config|
   config.mock_with :rr
