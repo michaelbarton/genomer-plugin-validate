@@ -1,4 +1,4 @@
-Feature: The valid annotations command line interface
+Feature: The validate annotations command line interface
   In order to generate correct genome annotation files
   A user can use the "validator" plugin at the command line
   to validate their annotations
@@ -15,5 +15,5 @@ Feature: The valid annotations command line interface
      Then the exit status should be 0
       And the output should contain:
       """
-      annotations    Validation GFF3 annotations file
+        annotations    Validate GFF3 annotations file
       """

@@ -70,7 +70,6 @@ Feature: Validating annotation files for missing attributes
       And the output should not contain "gene3"
       And the output should contain:
         """
-        No 'Name' or 'product' field for annotation 'gene4'
-
+        No 'Name' or 'product' attribute for annotation 'gene4'
         """
 

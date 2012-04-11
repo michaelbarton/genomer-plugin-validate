@@ -2,16 +2,25 @@ require 'spec_helper'
 
 describe GenomerPluginValidate do
 
-  before do
-    @example = GenomerPluginValidate::Example = Class.new(GenomerPluginValidate)
-    any_instance_of(described_class) do |u|
-      stub(u).require(anything)
-    end
-  end
-
   describe "#run" do
 
+    after do
+      GenomerPluginValidate::Group.send(:remove_const,'Example')
+    end
+
+    before do
+      @example = GenomerPluginValidate::Group::Example = Class.new
+    end
+
+    subject do
+      described_class.new([arg].compact,{}).run
+    end
+
     context "passed no arguments" do
+
+      let(:arg) do
+        nil
+      end
 
       before do
         def @example.description
@@ -25,34 +34,58 @@ describe GenomerPluginValidate do
           
           Available validation groups:
         EOS
-        described_class.new([],{}).run.should include msg.unindent
+        subject.should include msg.unindent
       end
 
       it "should include the descriptions annotation groups" do
         msg = '  example        Some description'
-        described_class.new([],{}).run.should include msg.unindent
+        subject.should include msg
       end
 
     end
 
-    context "passed the name of a known validation group" do
+    context "passed an unknown validation group name" do
 
-      it "should initialize and call run on the required plugin" do
-        any_instance_of(@example){ |u| mock(u).run }
-        described_class.new(['example'],{}).run
+      let(:arg) do
+        "unknown"
+      end
+
+      it "should raise and Genomer::Error" do
+        lambda{subject.to_s}.should raise_error Genomer::Error,
+          "Unknown validation group 'unknown'"
       end
 
     end
 
-  end
+    context "passed a known validation group name" do
 
-  describe "#validator_names_to_classes" do
+      let(:validator) do
+        c = Class.new(Genomer::Plugin)
+        any_instance_of(c) do |instance|
+          mock(instance).run{ [['some_error_1', 'some_error_2'],['another_error_1']]}
+        end
+        c
+      end
 
-    subject do
-      described_class.validator_names_to_classes
+      before do
+        mock(GenomerPluginValidate::Group).groups{{'example' => @example}}
+        mock(@example).validators{ ['example'] }
+        mock(GenomerPluginValidate::Validator).validators{{'example' => validator}}
+      end
+
+      let(:arg) do
+        "example"
+      end
+
+      it "should return a string output of validation error array" do
+        subject.should ==<<-EOS.unindent.strip
+           some_error_1
+           some_error_2
+           another_error_1
+        EOS
+      end
+
     end
-
-    its(['example']){should ==  @example}
 
   end
 
