@@ -15,7 +15,7 @@ describe GenomerPluginValidate::Validator::ViewAttributes do
   end
 
   describe "where there are valid view attributes" do
-    attrs = %w|product ec_number function|
+    attrs = %w|product ec_number function feature_type|
     attrs.each do |attr|
       attns = [annotation({:attributes => {attr => 'something'}})]
       it{ should return_no_errors_for attns}

@@ -72,6 +72,7 @@ Feature: Validating annotation files for incorrect attributes
         | product      |
         | function     |
         | ec_number    |
+        | feature_type |
 
   Scenario: Validating an annotations file with unknown GFF3 attributes
     Given I successfully run `genomer init project`

@@ -1,7 +1,7 @@
 class GenomerPluginValidate::Validator::ViewAttributes < Genomer::Plugin
 
   def valid_view_attributes
-    %w|product ec_number function|
+    %w|product ec_number function feature_type|
   end
 
   def run
