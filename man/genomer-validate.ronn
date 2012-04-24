@@ -7,22 +7,23 @@ genomer-validate(1) -- Test assembly files for errors
 
 ## DESCRIPTION
 
-**Genomer-validate** test the assembly files for errors. Any detected errors 
+**Genomer-validate** tests the assembly files for errors. Any detected errors 
 are reported to the terminal.
 
 ## OPTIONS
 
-  * `--validate_for_view`
-    the GFF ninth-column attributes are validated to ensure that all attributes 
+  * `--no_view_validations`
+    The GFF ninth-column attributes are validated to ensure that all attributes 
     beginning with a lower case character match those used by 
-    genomer-plugin-view to generate GenBank annotation table output.
+    genomer-plugin-view to generate GenBank annotation table output. This 
+    argument can be used to disable these validations.
 
 ## FILE TYPES
 
 ### ANNOTATIONS
 
 Test the annotation file for errors. The default location for this file is 
-**assembly/annotations.gff**. The following validations are performed:.
+**assembly/annotations.gff**. The following validations are performed:
 
   * `Identical locations`:
     Flag annotations of the same type with identical start and end coordinates.
@@ -33,14 +34,17 @@ Test the annotation file for errors. The default location for this file is
   * `Missing ID`:
     Flag annotations without an ID attribute.
 
+  * `Missing either Name or product`:
+    Flag annotations without either a Name or product attribute.
+
   * `Invalid GFF Attributes`:
     Flag annotations with capitalised attribute keys outside of the GFF3 
     vocabulary. See below for a description of this vocabulary.
 
-  * `Invalid Genomer Plugin View Attributes (optional)`:
+  * `Invalid Genomer Plugin View Attributes`:
     Flag annotations with attribute keys outside of the genomer-plugin-view 
-    vocabulary. This check is only performed if specified with the 
-    `--validate_for_view` command line flag.
+    vocabulary. This validation can be disabled using the `--validate_for_view` 
+    command line flag.
 
 The [GFF3 specification][http://www.sequenceontology.org/gff3.shtml] restricts 
 attributes beginning with an upper case character (A-Z) in the ninth column to 
@@ -62,22 +66,23 @@ raise an error if not present.
   * Is\_circular
 
 Any fields beginning with a lower case character (a-z) are allowed in the GFF3 
-ninth column. Therefore any attributes can be added to this column as long as 
-they match this requirement. The genomer-plugin-view allows the use of 
-additional fields to populate fields in the GenBank annotation table. The 
-optional `--validate_for_view` flag can be used to ensure that all lower case 
-attribute flags match only those used by genomer-plugin-view. The allowed 
-attribute keys are as follows:
+ninth column. The genomer-plugin-view however uses these lower case fields to 
+populate a GenBank annotation table and a validation is performed for this.
+The optional `--no_view_validations` flag can be used to disable this 
+validation. The allowed genomer-plugin-view attribute keys are as follows:
 
   * product
   * ec\_number
   * function
+  * feature\_type
 
 ## EXAMPLES
 
-Test that the annotation file is error free.
+Test the annotation file for errors.
 
     $ genomer validate annotations
+
+## BUGS
 
 **Genomer-validate** is written in Ruby and depends on the genomer gem. See the 
 Gemfile in the genomer-plugin-validate gem install directory for version 
