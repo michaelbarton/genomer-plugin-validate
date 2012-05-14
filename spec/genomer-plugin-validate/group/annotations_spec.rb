@@ -12,5 +12,6 @@ describe GenomerPluginValidate::Group::Annotations do
   its("class.validators"){ should include :gff3_attributes }
   its("class.validators"){ should include :view_attributes }
   its("class.validators"){ should include :duplicate_coordinates }
+  its("class.validators"){ should include :uppercase_name }
 
 end

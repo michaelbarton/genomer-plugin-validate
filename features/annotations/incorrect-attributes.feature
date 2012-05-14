@@ -20,7 +20,7 @@ Feature: Validating annotation files for incorrect attributes
       And I write to "assembly/annotations.gff" with:
         """
         ##gff-version 3
-        contig1	.	gene	3	4	.	+	1	ID=gene1;Name=Gene1;<attribute>=abc
+        contig1	.	gene	3	4	.	+	1	ID=gene1;Name=gene1;<attribute>=abc
         """
       And I append to "Gemfile" with:
         """
@@ -58,7 +58,7 @@ Feature: Validating annotation files for incorrect attributes
       And I write to "assembly/annotations.gff" with:
         """
         ##gff-version 3
-        contig1	.	gene	3	4	.	+	1	ID=gene1;Name=Gene1;<attribute>=abc
+        contig1	.	gene	3	4	.	+	1	ID=gene1;Name=gene1;<attribute>=abc
         """
       And I append to "Gemfile" with:
         """

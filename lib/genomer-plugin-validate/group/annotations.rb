@@ -11,7 +11,8 @@ class GenomerPluginValidate::Group::Annotations
       :no_name_or_product,
       :gff3_attributes,
       :view_attributes,
-      :duplicate_coordinates
+      :duplicate_coordinates,
+      :uppercase_name
     ]
   end
 
