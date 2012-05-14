@@ -6,7 +6,8 @@ class GenomerPluginValidate::Validator::UppercaseName < Genomer::Plugin
       select{|(name,_)| name =~ /^[A-Z]/}.
       map{|(_,entry)| entry}.
       flatten.
-      map{|i| "Illegal capitalised Name attribute '#{i.get_attribute('Name')}' for '#{i.id}'"}
+      map{|i| [i.get_attribute('Name'),i.id]}.
+      map{|i| "Illegal capitalised Name attribute '%s' for '%s'" % i}
   end
 
 end
