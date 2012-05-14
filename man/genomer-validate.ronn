@@ -37,6 +37,9 @@ Test the annotation file for errors. The default location for this file is
   * `Missing either Name or product`:
     Flag annotations without either a Name or product attribute.
 
+  * `Capitalised Name attribute`:
+    Flag annotations with Name attributes beginning with an uppercase letter.
+
   * `Invalid GFF Attributes`:
     Flag annotations with capitalised attribute keys outside of the GFF3 
     vocabulary. See below for a description of this vocabulary.
