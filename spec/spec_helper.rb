@@ -27,4 +27,9 @@ RSpec.configure do |config|
     annotation(:attributes => {:ID => id})
   end
 
+  def annotation_with_product(product)
+    annotation(:attributes => {'product' => product, 'ID' => 1})
+  end
+
+
 end
