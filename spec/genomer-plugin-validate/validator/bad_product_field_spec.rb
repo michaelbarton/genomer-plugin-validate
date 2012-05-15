@@ -56,14 +56,14 @@ describe GenomerPluginValidate::Validator::BadProductField do
     it do
       should return_errors_for(
         [annotation_with_product("n-term membrane region")],
-        ["Bad product field for '1:' products containing 'n-term' are not allowed."]
+        ["Bad product field for '1:' 'N-terminal' or variations are not allowed."]
       )
     end
 
     it do
       should return_errors_for(
         [annotation_with_product("N terminal membrane region")],
-        ["Bad product field for '1:' products containing 'n terminal' are not allowed."]
+        ["Bad product field for '1:' 'N-terminal' or variations are not allowed."]
       )
     end
   end

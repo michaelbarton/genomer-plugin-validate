@@ -33,7 +33,7 @@ class GenomerPluginValidate::Validator::BadProductField < Genomer::Plugin
 
   def nterm_products
     products_matching(/(?!\B)([Nn][-\s][Tt]erm(inal)?)/).
-      map{|i| (ERROR + "products containing '%s' are not allowed.") % i}
+      map{|i| (ERROR + "'N-terminal' or variations are not allowed.") % i}
   end
 
   def all_caps_products

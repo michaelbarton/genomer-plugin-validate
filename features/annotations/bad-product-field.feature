@@ -48,10 +48,10 @@ Feature: Validating annotation files for bad product fields
        | something related    | products ending with 'related' are not allowed.   |
        | something related.   | products ending with 'related' are not allowed.   |
        | something Related    | products ending with 'related' are not allowed.   |
-       | something n-term     | products containing 'n-term' are not allowed.     |
-       | something N-term     | products containing 'n-term' are not allowed.     |
-       | something N-terminal | products containing 'n-terminal' are not allowed. |
-       | something n-terminal | products containing 'n-terminal' are not allowed. |
+       | something n-term     | 'N-terminal' or variations are not allowed.       |
+       | something N-term     | 'N-terminal' or variations are not allowed.       | 
+       | something N-terminal | 'N-terminal' or variations are not allowed.       |
+       | something n-terminal | 'N-terminal' or variations are not allowed.       |
        | SOMETHING            | all caps product fields are not allowed.          |
        | SOMETHING PROTEIN    | all caps product fields are not allowed.          |
        | SOMETHING-PROTEIN    | all caps product fields are not allowed.          |
