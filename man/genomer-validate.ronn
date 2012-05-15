@@ -49,6 +49,10 @@ Test the annotation file for errors. The default location for this file is
     vocabulary. This validation can be disabled using the `--validate_for_view` 
     command line flag.
 
+  * `Bad product fields`: NCBI requires that annotation product fields not
+  contain terms such as "putative" or end with "-like." This validator checks
+  that product fields do not contain the more common types of disallowed terms. 
+
 The [GFF3 specification][http://www.sequenceontology.org/gff3.shtml] restricts 
 attributes beginning with an upper case character (A-Z) in the ninth column to 
 a controlled vocabulary. Any attribute keys appearing in the ninth column not 
