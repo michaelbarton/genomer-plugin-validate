@@ -18,11 +18,11 @@ class GenomerPluginValidate::Validator::BadProductField < Genomer::Plugin
       flatten(1).
       map{|(id,product)| [id, re.match(product)]}.
       select{|(_,match)| match}.
-      map{|(id,match)| [id,match.to_a.last.downcase]}
+      map{|(id,match)| [id,match.to_a[1].downcase]}
   end
 
   def hypothetical_products
-    products_matching(/^([Hh]ypothetical)/).
+    products_matching(/^([Hh]ypothetical)(?! protein)/).
       map{|i| (ERROR + "start with 'putative' instead of '%s.'") % i}
   end
 
@@ -32,7 +32,7 @@ class GenomerPluginValidate::Validator::BadProductField < Genomer::Plugin
   end
 
   def nterm_products
-    products_matching(/([Nn][-\s][Tt]ermi?n?a?l?)/).
+    products_matching(/(?!\B)([Nn][-\s][Tt]erm(inal)?)/).
       map{|i| (ERROR + "products containing '%s' are not allowed.") % i}
   end
 

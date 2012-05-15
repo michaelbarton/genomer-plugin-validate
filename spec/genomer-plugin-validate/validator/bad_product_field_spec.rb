@@ -16,17 +16,22 @@ describe GenomerPluginValidate::Validator::BadProductField do
   describe "where the product field begins with hypothetical" do
     it do
       should return_errors_for(
-        [annotation_with_product("hypothetical protein")],
+        [annotation_with_product("hypothetical something")],
         ["Bad product field for '1:' start with 'putative' instead of 'hypothetical.'"]
       )
     end
 
     it do
       should return_errors_for(
-        [annotation_with_product("Hypothetical protein")],
+        [annotation_with_product("Hypothetical somthing")],
         ["Bad product field for '1:' start with 'putative' instead of 'hypothetical.'"]
       )
     end
+  end
+
+  describe "where the product field contains only 'hypothetical protein'" do
+    it{ should return_no_errors_for [annotation_with_product("hypothetical protein")]}
+    it{ should return_no_errors_for [annotation_with_product("Hypothetical protein.")]}
   end
 
   describe "where the product ends with with like/domain/related" do
@@ -60,6 +65,12 @@ describe GenomerPluginValidate::Validator::BadProductField do
         [annotation_with_product("N terminal membrane region")],
         ["Bad product field for '1:' products containing 'n terminal' are not allowed."]
       )
+    end
+  end
+
+  describe "where the product field contains similiar to 'n terminal'" do
+    it do
+      should return_no_errors_for [annotation_with_product("transcription termination")]
     end
   end
 
