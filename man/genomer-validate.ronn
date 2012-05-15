@@ -40,11 +40,11 @@ Test the annotation file for errors. The default location for this file is
   * `Capitalised Name attribute`:
     Flag annotations with Name attributes beginning with an uppercase letter.
 
-  * `Invalid GFF Attributes`:
+  * `Invalid GFF attributes`:
     Flag annotations with capitalised attribute keys outside of the GFF3 
     vocabulary. See below for a description of this vocabulary.
 
-  * `Invalid Genomer Plugin View Attributes`:
+  * `Invalid genomer plugin view attributes`:
     Flag annotations with attribute keys outside of the genomer-plugin-view 
     vocabulary. This validation can be disabled using the `--validate_for_view` 
     command line flag.
