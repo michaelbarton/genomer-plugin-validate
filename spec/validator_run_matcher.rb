@@ -16,8 +16,8 @@ end
 
 RSpec::Matchers.define :return_errors_for do |annotations,errors|
   match do
-    @actual   = errors_for(actual,annotations)
-    @expected = errors
+    @actual   = errors_for(actual,annotations).sort
+    @expected = errors.sort
     actual == expected
   end
 
